@@ -22,6 +22,8 @@
 **/
 Piezas::Piezas()
 {
+    board.resize(3, std::vector<Piece>(4, Blank));
+    turn = X;
 }
 
 /**
@@ -30,6 +32,7 @@ Piezas::Piezas()
 **/
 void Piezas::reset()
 {
+    board.resize(3, std::vector<Piece>(4, Blank));
 }
 
 /**
@@ -42,6 +45,23 @@ void Piezas::reset()
 **/ 
 Piece Piezas::dropPiece(int column)
 {
+    Piece placed_piece = turn;
+    /* Toggle turn */
+    if (turn == X)
+        turn = O;
+    else if (turn == O)
+        turn = X;
+
+    /* If out of bounds return Invalid*/
+    if (column > 3 || column < 0)
+        return Invalid;
+
+    for (int i = 0; i < 3; i++) {
+        if (board[i][column] == Blank) {
+            board[i][column] = placed_piece;
+            return placed_piece;
+        }
+    }
     return Blank;
 }
 
@@ -51,7 +71,11 @@ Piece Piezas::dropPiece(int column)
 **/
 Piece Piezas::pieceAt(int row, int column)
 {
-    return Blank;
+    if (row > 2 || column > 3 || row < 0 || column < 0) {
+        return Invalid;
+    } else {
+        return board[row][column];
+    }
 }
 
 /**
@@ -65,5 +89,77 @@ Piece Piezas::pieceAt(int row, int column)
 **/
 Piece Piezas::gameState()
 {
-    return Blank;
+    /* [row][column] [i][j] */
+    int max_o = 0;
+    int max_x = 0;
+    int count = 0;
+    for (int i = 0; i < 3; i++) {
+        Piece piece = board[i][0];
+        for (int j = 0; j < 4; j++) {
+            if (board[i][j] == Blank) {
+                return Invalid;
+            } else if (board[i][j] == piece) {
+                count++;
+            }
+        }
+        switch (piece) {
+            case X:
+            {
+                if (count > max_x) {
+                    max_x = count;
+                    count = 0;
+                }
+                break;
+            }
+            case O:
+            {
+                if (count > max_o) {
+                    max_o = count;
+                    count = 0;
+                }
+                break;
+            }
+            default:
+                return Invalid;
+        }
+    }
+
+    for (int i = 0; i < 4; i++) {
+        Piece piece = board[0][i];
+        for (int j = 0; j < 3; j++) {
+            if (board[j][i] == Blank) {
+                return Invalid;
+            } else if (board[j][i] == piece) {
+                count++;
+            }
+        }
+        switch (piece) {
+            case X:
+            {
+                if (count > max_x) {
+                    max_x = count;
+                    count = 0;
+                }
+                break;
+            }
+            case O:
+            {
+                if (count > max_o) {
+                    max_o = count;
+                    count = 0;
+                }
+                break;
+            }
+            default:
+                return Invalid;
+        }
+    }
+
+    if (max_x == max_o) {
+        return Blank;
+    } else if (max_x > max_o) {
+        return X;
+    } else {
+        return O;
+    }
 }
