@@ -32,7 +32,11 @@ Piezas::Piezas()
 **/
 void Piezas::reset()
 {
-    board.resize(3, std::vector<Piece>(4, Blank));
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 4; j++) {
+            board[i][j] = Blank;
+        }
+    }
 }
 
 /**
@@ -107,7 +111,6 @@ Piece Piezas::gameState()
             {
                 if (count > max_x) {
                     max_x = count;
-                    count = 0;
                 }
                 break;
             }
@@ -115,13 +118,13 @@ Piece Piezas::gameState()
             {
                 if (count > max_o) {
                     max_o = count;
-                    count = 0;
                 }
                 break;
             }
             default:
                 return Invalid;
         }
+        count = 0;
     }
 
     for (int i = 0; i < 4; i++) {
@@ -138,7 +141,6 @@ Piece Piezas::gameState()
             {
                 if (count > max_x) {
                     max_x = count;
-                    count = 0;
                 }
                 break;
             }
@@ -146,13 +148,13 @@ Piece Piezas::gameState()
             {
                 if (count > max_o) {
                     max_o = count;
-                    count = 0;
                 }
                 break;
             }
             default:
                 return Invalid;
         }
+        count = 0;
     }
 
     if (max_x == max_o) {
