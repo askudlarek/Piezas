@@ -143,7 +143,7 @@ TEST(PiezasTest, reset)
     Piezas obj;
     obj.dropPiece(0);
     obj.reset();
-    ASSERT_EQ(pieceAt(0,0), Blank);
+    ASSERT_EQ(obj.pieceAt(0,0), Blank);
 }
 
 /* Tests gameState for Invalid when game isn't over */
